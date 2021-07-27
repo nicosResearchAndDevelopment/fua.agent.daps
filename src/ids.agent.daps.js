@@ -1,5 +1,7 @@
+const {EventEmitter} = require('events');
 
-class Daps {
+class Daps extends EventEmitter {
+    #id        = "agent/daps/";
     #daps_host = "";
 
     #publicKey = undefined; // !!!
@@ -12,6 +14,7 @@ class Daps {
     //endregion DAT
 
     constructor({
+                    '@id':        id = undefined,
                     'daps_host': daps_host = undefined,
                     'publicKey': publicKey,
                     //
@@ -21,6 +24,9 @@ class Daps {
 
                 }) {
 
+        super();
+
+        this.#id        = (id || this.#id);
         this.#daps_host = daps_host; // REM: payload.iss
         if ((!this.#daps_host) || (this.#daps_host === ""))
             throw (new Error(`Daps agent : 'daps_host' is missing.`));
@@ -28,7 +34,16 @@ class Daps {
         this.#default_DAT_payload_context             = (DAT_payload_context || this.#default_DAT_payload_context);
         this.#default_DAT_payload_expiration_duration = (DAT_payload_expiration_duration || this.#default_DAT_payload_expiration_duration);
         this.#default_DAT_payload_scope               = (DAT_payload_scope || this.#default_DAT_payload_scope);
+
+        Object.defineProperties(this.token, {
+            '@id': {value: `${this.#id}token`}
+        });
+
     } // constructor
+
+    get ['@id']() {
+        return this.#id;
+    }
 
     async token({
                     'grant_type':            grant_type,
@@ -59,7 +74,10 @@ class Daps {
             ;
             if (audience)
                 payload['aud'] = audience;
-
+            this['emit']("token.result", {
+                'header':  header,
+                'payload': payload
+            });
             return DAT;
         } catch (jex) {
             throw jex;
