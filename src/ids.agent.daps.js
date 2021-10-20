@@ -8,13 +8,13 @@ class Daps extends EventEmitter {
 
     //region DAT
     #default_DAT_payload_context             = "ids:DatRequestToken";
-    #default_DAT_payload_expiration_duration = (24 * 60 * 60); //REM one day in seconds
+    #default_DAT_payload_expiration_duration = (24 * 60 * 60); // REM : one day in seconds
     #default_DAT_payload_scope               = undefined;
 
     //endregion DAT
 
     constructor({
-                    '@id':        id = undefined,
+                    '@id':       id = undefined,
                     'daps_host': daps_host = undefined,
                     'publicKey': publicKey,
                     //
@@ -24,10 +24,11 @@ class Daps extends EventEmitter {
 
                 }) {
 
-        super();
+        super(); // REM : EventEmitter
 
         this.#id        = (id || this.#id);
         this.#daps_host = daps_host; // REM: payload.iss
+
         if ((!this.#daps_host) || (this.#daps_host === ""))
             throw (new Error(`Daps agent : 'daps_host' is missing.`));
 
@@ -41,7 +42,7 @@ class Daps extends EventEmitter {
 
     } // constructor
 
-    get ['@id']() {
+    get ['id']() {
         return this.#id;
     }
 
