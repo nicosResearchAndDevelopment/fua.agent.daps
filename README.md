@@ -1,6 +1,6 @@
 # ids.agent.daps
 
-- [https://daps.aisec.fraunhofer.de/.well-known/jwks.json]8https://daps.aisec.fraunhofer.de/.well-known/jwks.json)
+- [IDS-G, DAPS](https://github.com/International-Data-Spaces-Association/IDS-G/tree/draft/core/DAPS)
 
 ---
 
