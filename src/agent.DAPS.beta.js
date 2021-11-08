@@ -3,8 +3,14 @@ const
     //jwt         = require("jsonwebtoken"),
     //{decodeProtectedHeader} = require('jose/util/decode_protected_header')
     {jwtVerify} = require('jose/jwt/verify'),
-    {SignJWT}   = require('jose/jwt/sign')
-;
+    {SignJWT}   = require('jose/jwt/sign'),
+    //
+    util        = require("@nrd/fua.core.util"),
+    AgentJOSE   = require('@nrd/fua.agent.jose')
+; // const
+
+//const jose = require('jose');
+//const parseJwk            = require('jose/JWKexport');
 
 //region error
 class ErrorDapsIdIsMissing extends Error {
@@ -25,6 +31,7 @@ function DAPS({
                   id:                   id,
                   rootUri:              rootUri,
                   domain:               domain,
+                  publicKey:            publicKey,
                   privateKey:           privateKey,
                   jwt_header_typ:       jwt_header_typ = "JWT",
                   jwt_header_kid:       jwt_header_kid_default = "default",
@@ -35,26 +42,71 @@ function DAPS({
                   jwt_payload_iss:      jwt_payload_iss_default,
                   jwt_payload_aud:      jwt_payload_aud_default = "https://w3id.org/idsa/code/IDS_CONNECTORS_ALL",
                   jwt_payload_scope:    jwt_payload_scope_default = ["ids_connector_attributes"],
-                  tweak_DAT_generation: tweak_DAT_generation = false
+                  tweak_DAT_generation: tweak_DAT_generation = false,
+                  //
+                  jwks_path:  jwks_path = "/.well-known/jwks.json",
+                  token_path: token_path = "/token",
+                  vc_path:    vc_path = "/vc"
               }) {
 
     let
+        //that = AgentJOSE,
+        jwsk = {
+            "keys": [
+                {
+                    "kid": "default",
+                    "alg": "RS256",
+                    "kty": "RSA",
+                    "use": "sig",
+                    "x5c": [
+                        ""
+                    ],
+                    "n":   "",
+                    "e":   "",
+                    "x5t": ""
+                }
+            ]
+        },
         daps = {}
     ;
+
+    //jwsk = exportJWK(publicKey);
+        //debugger;
 
     if (new.target) {
         if (!id)
             throw new ErrorDapsIdIsMissing("id is missing");
         Object.defineProperties(daps, {
-            id:          {
+            id:         {
                 value:      id,
                 enumerable: true
             },
-            domain:      {
+            domain:     {
                 set: (dom) => {
                     if (!domain)
                         domain = dom;
                 }
+            },
+            jwks_path:  {
+                get:           () => {
+                    return jwks_path;
+                }, enumerable: false
+            },
+            token_path: {
+                get:           () => {
+                    return token_path;
+                }, enumerable: false
+            },
+            vc_path:    {
+                get:           () => {
+                    return vc_path;
+                }, enumerable: false
+            },
+
+            jwks:        {
+                get:           () => {
+                    return jwsk;
+                }, enumerable: false
             },
             generateDAT: {
                 value: async ({
