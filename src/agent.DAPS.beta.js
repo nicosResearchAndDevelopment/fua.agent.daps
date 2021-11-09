@@ -2,17 +2,24 @@ const
     crypto      = require("crypto"),
     //jwt         = require("jsonwebtoken"),
     //{decodeProtectedHeader} = require('jose/util/decode_protected_header')
-    {jwtVerify} = require('jose/jwt/verify'),
-    {SignJWT}   = require('jose/jwt/sign'),
+    //{jwtVerify} = require('jose/jwt/verify'),
+    //{SignJWT}   = require('jose/jwt/sign'),
+    {exportJWK} = require('jose'),
     //
-    util        = require("@nrd/fua.core.util"),
-    AgentJOSE   = require('@nrd/fua.agent.jose')
+    util        = require("@nrd/fua.core.util")
 ; // const
 
 //const jose = require('jose');
 //const parseJwk            = require('jose/JWKexport');
 
 //region error
+// TODO : better ERRORS :: code, etc.
+class ErrorInstanceWithNew extends Error {
+    constructor() {
+        super(`[${timestamp()}] : fua.ids.agent.DAPS : DAPS :: has to bi instantiated with 'new'.`);
+    }
+}
+
 class ErrorDapsIdIsMissing extends Error {
     constructor(message) {
         super(`[${timestamp()}] : fua.ids.agent.DAPS : DAPS :: ${message}`);
@@ -22,15 +29,28 @@ class ErrorDapsIdIsMissing extends Error {
 //endregion error
 
 //region fn
-//function timestamp() {
-//    return (new Date).toISOString();
-//}
+async function buildPublicKeySet(keys) {
+    try {
+        let result = [];
+        for (const [key, value] of Object.entries(keys)) {
+            let keyStoreEntry = await exportJWK(value.publicKey);
+            keyStoreEntry.kid = key;
+            //console.log(`${key}: ${value}`);
+            result.push(keyStoreEntry);
+        } // for()
+        return result;
+    } catch (jex) {
+        throw(jex);
+    } // try
+} // buildPublicKeySet()
+
 //endregion fn
 
 function DAPS({
                   id:                   id,
                   rootUri:              rootUri,
                   domain:               domain,
+                  keys:                 keys,
                   publicKey:            publicKey,
                   privateKey:           privateKey,
                   jwt_header_typ:       jwt_header_typ = "JWT",
@@ -49,66 +69,66 @@ function DAPS({
                   vc_path:    vc_path = "/vc"
               }) {
 
-    let
-        //that = AgentJOSE,
-        jwsk = {
-            "keys": [
-                {
-                    "kid": "default",
-                    "alg": "RS256",
-                    "kty": "RSA",
-                    "use": "sig",
-                    "x5c": [
-                        ""
-                    ],
-                    "n":   "",
-                    "e":   "",
-                    "x5t": ""
-                }
-            ]
-        },
-        daps = {}
-    ;
-
-    //jwsk = exportJWK(publicKey);
-        //debugger;
-
     if (new.target) {
+
+        let
+            publicKeyStore = {
+                "keys": [
+                    {
+                        "kid": "default",
+                        "alg": "RS256",
+                        "kty": "RSA",
+                        "use": "sig",
+                        "x5c": [
+                            ""
+                        ],
+                        "n":   "",
+                        "e":   "",
+                        "x5t": ""
+                    }
+                ]
+            },
+            daps           = {}
+        ;
         if (!id)
             throw new ErrorDapsIdIsMissing("id is missing");
+
+        (async () => {
+            publicKeyStore = await buildPublicKeySet(keys)}
+        )();
+
         Object.defineProperties(daps, {
-            id:         {
+            id:             {
                 value:      id,
                 enumerable: true
             },
-            domain:     {
+            domain:         {
                 set: (dom) => {
                     if (!domain)
                         domain = dom;
                 }
             },
-            jwks_path:  {
+            jwks_path:      {
                 get:           () => {
                     return jwks_path;
                 }, enumerable: false
             },
-            token_path: {
+            token_path:     {
                 get:           () => {
                     return token_path;
                 }, enumerable: false
             },
-            vc_path:    {
+            vc_path:        {
                 get:           () => {
                     return vc_path;
                 }, enumerable: false
             },
-
-            jwks:        {
+            publicKeyStore: {
                 get:           () => {
-                    return jwsk;
+                    return publicKeyStore;
                 }, enumerable: false
             },
-            generateDAT: {
+            generateDAT:    {
                 value: async ({
                                   client_assertion:      client_assertion,
                                   client_assertion_type: client_assertion_type,
@@ -200,7 +220,7 @@ function DAPS({
                     } // try
                 } // fn
             }, // generateDAT
-            generateVC:  {
+            generateVC:     {
                 value: async ({
                                   //'assertion':                req['body']['assertion'],
                                   client_assertion:      client_assertion,
@@ -221,9 +241,13 @@ function DAPS({
                 } // fn
             } // generateVC
         }); // Object.defineProperties()
+
+        Object.freeze(daps);
+        return daps;
+    } else {
+        throw new ErrorInstanceWithNew();
     } // if ()
-    Object.freeze(daps);
-    return daps;
+
 } // DAPS()
 
 Object.defineProperties(DAPS, {
