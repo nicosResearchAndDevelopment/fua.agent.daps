@@ -4,7 +4,7 @@ const
     //{decodeProtectedHeader} = require('jose/util/decode_protected_header')
     //{jwtVerify} = require('jose/jwt/verify'),
     //{SignJWT}   = require('jose/jwt/sign'),
-    {exportJWK} = require('jose'),
+    {exportJWK, jwtVerify, SignJWT} = require('jose'),
     //
     util        = require("@nrd/fua.core.util")
 ; // const
@@ -31,12 +31,12 @@ class ErrorDapsIdIsMissing extends Error {
 //region fn
 async function buildPublicKeySet(keys) {
     try {
-        let result = [];
+        let result = {keys: [] };
         for (const [key, value] of Object.entries(keys)) {
             let keyStoreEntry = await exportJWK(value.publicKey);
             keyStoreEntry.kid = key;
             //console.log(`${key}: ${value}`);
-            result.push(keyStoreEntry);
+            result.keys.push(keyStoreEntry);
         } // for()
         return result;
     } catch (jex) {
