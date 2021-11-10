@@ -1,12 +1,12 @@
 const
-    crypto      = require("crypto"),
+    crypto                          = require("crypto"),
     //jwt         = require("jsonwebtoken"),
     //{decodeProtectedHeader} = require('jose/util/decode_protected_header')
     //{jwtVerify} = require('jose/jwt/verify'),
     //{SignJWT}   = require('jose/jwt/sign'),
     {exportJWK, jwtVerify, SignJWT} = require('jose'),
     //
-    util        = require("@nrd/fua.core.util")
+    util                            = require("@nrd/fua.core.util")
 ; // const
 
 //const jose = require('jose');
@@ -31,7 +31,7 @@ class ErrorDapsIdIsMissing extends Error {
 //region fn
 async function buildPublicKeySet(keys) {
     try {
-        let result = {keys: [] };
+        let result = {keys: []};
         for (const [key, value] of Object.entries(keys)) {
             let keyStoreEntry = await exportJWK(value.publicKey);
             keyStoreEntry.kid = key;
@@ -94,7 +94,8 @@ function DAPS({
             throw new ErrorDapsIdIsMissing("id is missing");
 
         (async () => {
-            publicKeyStore = await buildPublicKeySet(keys)}
+                publicKeyStore = await buildPublicKeySet(keys)
+            }
         )();
 
         Object.defineProperties(daps, {
@@ -152,6 +153,12 @@ function DAPS({
                             publicKey     = user.getLiteral('dapsm:publicKey').value
                         ;
                         let
+                            carrier       = {
+                                "access_token": "",
+                                "scope":        "ids_connector_attributes",
+                                "token_type":   "bearer",
+                                "expires_in":   "3600"
+                            },
                             DAT
                         ;
 
@@ -212,9 +219,14 @@ function DAPS({
                                 .setProtectedHeader(jwt_header)
                                 .sign(privateKey);
 
+                            carrier.access_token = DAT;
+                            carrier.expires_in   = jwt_payload.exp;
+                            carrier.scope        = jwt_payload.scope;
+
                         } // if ()
 
-                        return DAT;
+                        //return DAT;
+                        return carrier;
                     } catch (jex) {
                         throw(jex);
                     } // try
