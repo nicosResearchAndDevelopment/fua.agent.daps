@@ -14,14 +14,13 @@ class Daps extends EventEmitter {
     //endregion DAT
 
     constructor({
-                    '@id':       id = undefined,
-                    'daps_host': daps_host = undefined,
-                    'publicKey': publicKey,
+                    '@id':     id = undefined, // TODO : @id >>> id
+                    daps_host: daps_host = undefined,
+                    publicKey: publicKey,
                     //
-                    'DAT_payload_context':             DAT_payload_context = undefined,
-                    'DAT_payload_expiration_duration': DAT_payload_expiration_duration = undefined,
-                    'DAT_payload_scope':               DAT_payload_scope = undefined
-
+                    DAT_payload_context:             DAT_payload_context = undefined,
+                    DAT_payload_expiration_duration: DAT_payload_expiration_duration = undefined,
+                    DAT_payload_scope:               DAT_payload_scope = undefined
                 }) {
 
         super(); // REM : EventEmitter
@@ -72,7 +71,7 @@ class Daps extends EventEmitter {
                     'exp':      (now_in_seconds + this.#default_DAT_payload_expiration_duration),
                     'nbf':      (valid_not_before + now_in_seconds)
                 }
-            ;
+            ; // let
             if (audience)
                 payload['aud'] = audience;
             this['emit']("token.result", {

@@ -64,6 +64,9 @@ function DAPS({
                   jwt_payload_scope:    jwt_payload_scope_default = ["ids_connector_attributes"],
                   tweak_DAT_generation: tweak_DAT_generation = false,
                   //
+                  tweak_DAT_custom_enabled:  tweak_DAT_custon_enabled = false,
+                  tweak_DAT_custom_max_size: tweak_DAT_custom_max_size = 1000, // REM : kB
+                  //
                   jwks_path:  jwks_path = "/.well-known/jwks.json",
                   token_path: token_path = "/token",
                   vc_path:    vc_path = "/vc"
