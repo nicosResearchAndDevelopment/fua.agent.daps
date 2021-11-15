@@ -64,7 +64,7 @@ function DAPS({
                   jwt_payload_scope:    jwt_payload_scope_default = ["ids_connector_attributes"],
                   tweak_DAT_generation: tweak_DAT_generation = false,
                   //
-                  tweak_DAT_custom_enabled:  tweak_DAT_custon_enabled = false,
+                  tweak_DAT_custom_enabled:  tweak_DAT_custom_enabled = false,
                   tweak_DAT_custom_max_size: tweak_DAT_custom_max_size = 1000, // REM : kB
                   //
                   jwks_path:  jwks_path = "/.well-known/jwks.json",
@@ -75,22 +75,7 @@ function DAPS({
     if (new.target) {
 
         let
-            publicKeyStore = {
-                "keys": [
-                    {
-                        "kid": "default",
-                        "alg": "RS256",
-                        "kty": "RSA",
-                        "use": "sig",
-                        "x5c": [
-                            ""
-                        ],
-                        "n":   "",
-                        "e":   "",
-                        "x5t": ""
-                    }
-                ]
-            },
+            publicKeyStore = undefined, // REM : set at runtime
             daps           = {}
         ;
         if (!id)
@@ -203,6 +188,10 @@ function DAPS({
                                     scope:                (jwt_payload_scope || jwt_payload_scope_default)
                                 }
                             ; // let
+
+                            if (tweak_DAT_custom_enabled && verified.payload.custom) {
+                                jwt_payload.custom = verified.payload.custom;
+                            } // if ()
 
                             if (tweak_DAT_generation && payload.tweak_dat) {
                                 jwt_payload.iss = (payload.tweak_dat.iss || jwt_payload.iss);
