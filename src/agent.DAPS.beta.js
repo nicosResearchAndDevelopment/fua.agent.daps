@@ -196,15 +196,15 @@ function DAPS({
                             if (tweak_DAT_generation && payload.tweak_dat) {
                                 jwt_payload.iss = (payload.tweak_dat.iss || jwt_payload.iss);
                                 jwt_payload.sub = (payload.tweak_dat.sub || jwt_payload.sub);
-                                jwt_payload.sub = (payload.tweak_dat.referringConnector || referringConnector.sub);
-                                jwt_payload.sub = (payload.tweak_dat.securityProfile || referringConnector.securityProfile);
-                                jwt_payload.sub = (payload.tweak_dat.extendedGuarantee || referringConnector.extendedGuarantee);
-                                jwt_payload.sub = (payload.tweak_dat.transportCertsSha256 || referringConnector.transportCertsSha256);
-                                jwt_payload.sub = (payload.tweak_dat.iat || referringConnector.iat);
-                                jwt_payload.sub = (payload.tweak_dat.exp || referringConnector.exp);
-                                jwt_payload.sub = (payload.tweak_dat.aud || referringConnector.aud);
-                                jwt_payload.sub = (payload.tweak_dat.nbf || referringConnector.nbf);
-                                jwt_payload.sub = (payload.tweak_dat.scope || referringConnector.scope);
+                                jwt_payload.sub = (payload.tweak_dat.referringConnector || jwt_payload.referringConnector);
+                                jwt_payload.sub = (payload.tweak_dat.securityProfile || jwt_payload.securityProfile);
+                                jwt_payload.sub = (payload.tweak_dat.extendedGuarantee || jwt_payload.extendedGuarantee);
+                                jwt_payload.sub = (payload.tweak_dat.transportCertsSha256 || jwt_payload.transportCertsSha256);
+                                jwt_payload.sub = (payload.tweak_dat.iat || jwt_payload.iat);
+                                jwt_payload.sub = (payload.tweak_dat.exp || jwt_payload.exp);
+                                jwt_payload.sub = (payload.tweak_dat.aud || jwt_payload.aud);
+                                jwt_payload.sub = (payload.tweak_dat.nbf || jwt_payload.nbf);
+                                jwt_payload.sub = (payload.tweak_dat.scope || jwt_payload.scope);
                             } // if ()
 
                             DAT = await new SignJWT(jwt_payload)
