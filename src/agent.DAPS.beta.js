@@ -137,7 +137,7 @@ function DAPS({
                         const
                             tri           = client_assertion.split('.'),
                             decoded_token = JSON.parse(new Buffer(tri[1], 'base64').toString('ascii')),
-                            user          = await domain.users.getByAttr('dapsm:skiaki', decoded_token['sub']),
+                            user          = await domain.getUserByAttribute('dapsm:skiaki', decoded_token['sub']),
                             publicKey     = user.getLiteral('dapsm:publicKey').value
                         ;
                         let
