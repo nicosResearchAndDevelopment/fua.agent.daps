@@ -74,6 +74,10 @@ function DAPS({
 
     if (new.target) {
 
+        // region testbed functions
+        let _nextDatRequestConfig = undefined;
+        // endregion testbed functions
+
         let
             publicKeyStore = undefined, // REM : set at runtime
             daps           = {}
@@ -193,6 +197,27 @@ function DAPS({
                                 jwt_payload.custom = verified.payload.custom;
                             } // if ()
 
+                            // region testbed functions
+                            if (_nextDatRequestConfig) {
+                                if (_nextDatRequestConfig.address === "next") {
+                                    jwt_payload['@type']             = (_nextDatRequestConfig.tweak_dat['@type'] || jwt_payload['@type']);
+                                    jwt_payload.iss                  = (_nextDatRequestConfig.tweak_dat.iss || jwt_payload.iss);
+                                    jwt_payload.sub                  = (_nextDatRequestConfig.tweak_dat.sub || jwt_payload.sub);
+                                    jwt_payload.referringConnector   = (_nextDatRequestConfig.tweak_dat.referringConnector || jwt_payload.referringConnector);
+                                    jwt_payload.securityProfile      = (_nextDatRequestConfig.tweak_dat.securityProfile || jwt_payload.securityProfile);
+                                    jwt_payload.extendedGuarantee    = (_nextDatRequestConfig.tweak_dat.extendedGuarantee || jwt_payload.extendedGuarantee);
+                                    jwt_payload.transportCertsSha256 = (_nextDatRequestConfig.tweak_dat.transportCertsSha256 || jwt_payload.transportCertsSha256);
+                                    jwt_payload.iat                  = (_nextDatRequestConfig.tweak_dat.iat || jwt_payload.iat);
+                                    jwt_payload.exp                  = (_nextDatRequestConfig.tweak_dat.exp || jwt_payload.exp);
+                                    jwt_payload.aud                  = (_nextDatRequestConfig.tweak_dat.aud || jwt_payload.aud);
+                                    jwt_payload.nbf                  = (_nextDatRequestConfig.tweak_dat.nbf || jwt_payload.nbf);
+                                    jwt_payload.scope                = (_nextDatRequestConfig.tweak_dat.scope || jwt_payload.scope);
+                                    if (_nextDatRequestConfig.once)
+                                        _nextDatRequestConfig = undefined;
+                                } // if ()
+                            } // if ()
+                            // endregion testbed functions
+
                             if (tweak_DAT_generation && verified.payload.tweak_dat) {
                                 jwt_payload['@type']             = (verified.payload.tweak_dat['@type'] || jwt_payload['@type']);
                                 jwt_payload.iss                  = (verified.payload.tweak_dat.iss || jwt_payload.iss);
@@ -245,6 +270,15 @@ function DAPS({
                     return DAT;
                 } // fn
             } // generateVC
+            // region testbed functions
+            ,
+            setNextDatRequestConfig: {
+                set: (config) => {
+                    _nextDatRequestConfig = config;
+                }
+            }
+            // endregion testbed functions
+
         }); // Object.defineProperties()
 
         Object.freeze(daps);
