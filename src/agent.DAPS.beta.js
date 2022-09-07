@@ -193,18 +193,19 @@ function DAPS({
                                 jwt_payload.custom = verified.payload.custom;
                             } // if ()
 
-                            if (tweak_DAT_generation && payload.tweak_dat) {
-                                jwt_payload.iss = (payload.tweak_dat.iss || jwt_payload.iss);
-                                jwt_payload.sub = (payload.tweak_dat.sub || jwt_payload.sub);
-                                jwt_payload.sub = (payload.tweak_dat.referringConnector || jwt_payload.referringConnector);
-                                jwt_payload.sub = (payload.tweak_dat.securityProfile || jwt_payload.securityProfile);
-                                jwt_payload.sub = (payload.tweak_dat.extendedGuarantee || jwt_payload.extendedGuarantee);
-                                jwt_payload.sub = (payload.tweak_dat.transportCertsSha256 || jwt_payload.transportCertsSha256);
-                                jwt_payload.sub = (payload.tweak_dat.iat || jwt_payload.iat);
-                                jwt_payload.sub = (payload.tweak_dat.exp || jwt_payload.exp);
-                                jwt_payload.sub = (payload.tweak_dat.aud || jwt_payload.aud);
-                                jwt_payload.sub = (payload.tweak_dat.nbf || jwt_payload.nbf);
-                                jwt_payload.sub = (payload.tweak_dat.scope || jwt_payload.scope);
+                            if (tweak_DAT_generation && verified.payload.tweak_dat) {
+                                jwt_payload['@type']             = (verified.payload.tweak_dat['@type'] || jwt_payload['@type']);
+                                jwt_payload.iss                  = (verified.payload.tweak_dat.iss || jwt_payload.iss);
+                                jwt_payload.sub                  = (verified.payload.tweak_dat.sub || jwt_payload.sub);
+                                jwt_payload.referringConnector   = (verified.payload.tweak_dat.referringConnector || jwt_payload.referringConnector);
+                                jwt_payload.securityProfile      = (verified.payload.tweak_dat.securityProfile || jwt_payload.securityProfile);
+                                jwt_payload.extendedGuarantee    = (verified.payload.tweak_dat.extendedGuarantee || jwt_payload.extendedGuarantee);
+                                jwt_payload.transportCertsSha256 = (verified.payload.tweak_dat.transportCertsSha256 || jwt_payload.transportCertsSha256);
+                                jwt_payload.iat                  = (verified.payload.tweak_dat.iat || jwt_payload.iat);
+                                jwt_payload.exp                  = (verified.payload.tweak_dat.exp || jwt_payload.exp);
+                                jwt_payload.aud                  = (verified.payload.tweak_dat.aud || jwt_payload.aud);
+                                jwt_payload.nbf                  = (verified.payload.tweak_dat.nbf || jwt_payload.nbf);
+                                jwt_payload.scope                = (verified.payload.tweak_dat.scope || jwt_payload.scope);
                             } // if ()
 
                             DAT = await new SignJWT(jwt_payload)
