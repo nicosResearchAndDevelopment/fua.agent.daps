@@ -2,7 +2,7 @@
   "name": "@nrd/fua.ids.agent.daps",
   "version": "1.0.0",
   "description": "",
-  "main": "src/agent.DAPS.beta.js",
+  "main": "src/agent.daps.js",
   "files": [
     "src/*"
   ],
