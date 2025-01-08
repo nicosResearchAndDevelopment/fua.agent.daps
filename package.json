@@ -27,5 +27,8 @@
     "url": "ssh://git@github.com:nicosResearchAndDevelopment/fua.agent.daps.git"
   },
   "author": "Jörg Langkau <jlangkau@nicos-ag.com>",
+  "contributors": [
+    "Simon Petrac <pfoerdie@gmail.com>"
+  ],
   "license": "MIT"
 }
