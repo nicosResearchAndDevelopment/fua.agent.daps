@@ -1,7 +1,7 @@
 const
     crypto               = require('crypto'),
     {jwtVerify, SignJWT} = require('jose'),
-    util                 = require('@nrd/fua.core.util');
+    util                 = require('@fua/core.util');
 
 class DAPSAgent {
 

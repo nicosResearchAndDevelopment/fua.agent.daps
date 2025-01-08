@@ -1,18 +1,18 @@
 {
-  "name": "@nrd/fua.ids.agent.daps",
-  "version": "1.0.0",
+  "name": "@fua/agent.daps",
+  "version": "0.0.0-dev",
   "description": "",
   "main": "src/agent.daps.js",
   "files": [
     "src/*"
   ],
   "dependencies": {
-    "@nrd/fua.core.util": "^1.0.12",
+    "@fua/core.util": "^1.0.12",
     "jose": "^4.2.0"
   },
   "devDependencies": {
-    "mocha": "^10.2.0",
-    "expect": "^26.6.2"
+    "expect": "26.x",
+    "mocha": "10.x"
   },
   "scripts": {
     "test": "mocha"
@@ -24,8 +24,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@git02.int.nsc.ag:10022/research/fua/ids/agent.daps.git"
+    "url": "ssh://git@github.com:nicosResearchAndDevelopment/fua.agent.daps.git"
   },
-  "author": "jlangkau@nicos-ag.com",
-  "license": "UNLICENSED"
+  "author": "Jörg Langkau <jlangkau@nicos-ag.com>",
+  "license": "MIT"
 }
